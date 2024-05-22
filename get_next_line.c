@@ -6,7 +6,7 @@
 /*   By: angerard <angerard@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 11:37:35 by angerard          #+#    #+#             */
-/*   Updated: 2024/05/13 18:49:35 by angerard         ###   ########.fr       */
+/*   Updated: 2024/05/16 17:09:35 by angerard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 static char	*ft_strchr(const char *s, int c)
 {
-	while ((char)c != *s)
+	while (*s)
 	{
-		if (!*s)
-			return (0);
+		if (*s == (char)c)
+			return ((char *)s);
 		s++;
 	}
-	return ((char *)s);
+	return (NULL);
 }
 
 static char	*handle_residual_data(char *line_buffer)
@@ -33,15 +33,15 @@ static char	*handle_residual_data(char *line_buffer)
 	{
 		i++;
 	}
-	if (line_buffer[i] == 0 || line_buffer[1] == 0)
+	if (line_buffer[i] == '\0')
 		return (NULL);
-	txt_left = ft_substr(line_buffer, i + i, ft_strlen(line_buffer) - i);
-	if (*txt_left == 0)
+	txt_left = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i - 1);
+	if (*txt_left == '\0')
 	{
 		free(txt_left);
 		txt_left = NULL;
 	}
-	line_buffer[i + 1] = 0;
+	line_buffer[i + 1] = '\0';
 	return (txt_left);
 }
 
@@ -61,7 +61,7 @@ static char	*read_line_from_file(int fd, char *txt_left, char *buffer)
 		}
 		else if (size_read == 0)
 			break ;
-		buffer[size_read] = 0;
+		buffer[size_read] = '\0';
 		if (!txt_left)
 			txt_left = ft_strdup("");
 		tmp = txt_left;
@@ -99,25 +99,23 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-// #include <stdio.h>
+#include <stdio.h>
 
-// int	main(void)
-// {
-// 	int		fd;
-// 	char	*line;
-
-// 	// int		i;
-// 	// i = 0;
-// 	fd = open("./test_text.txt", O_RDONLY);
-// 	while (1)
-// 	{
-// 		line = get_next_line(fd);
-// 		// printf("[%d]: %s", i, line);
-// 		printf("%s", line);
-// 		if (line == NULL)
-// 			break ;
-// 		free(line);
-// 		// i++;
-// 	}
-// 	return (0);
-// }
+int main(void)
+{
+    int fd = open("./test_text.txt", O_RDONLY);
+    // int fd = open("/no_text_file.txt.txt", O_RDWR);
+    if (fd < 0)
+    {
+        perror("Error opening file");
+        return (1);
+    }
+    char *line;
+    while ((line = get_next_line(fd)))
+    {
+        printf("%s", line);
+        free(line);
+    }
+    close(fd);
+    return (0);
+}

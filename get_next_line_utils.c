@@ -6,7 +6,7 @@
 /*   By: angerard <angerard@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:15:27 by angerard          #+#    #+#             */
-/*   Updated: 2024/05/13 16:18:02 by angerard         ###   ########.fr       */
+/*   Updated: 2024/05/16 16:07:14 by angerard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 			substr[0] = '\0';
 		return (substr);
 	}
-	actual_length = ft_strlen(s + start);
+	actual_length = ft_strlen(s) - start;
 	if (actual_length > len)
 		actual_length = len;
 	substr = (char *)malloc(actual_length + 1);
@@ -106,6 +106,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = 0;
 	while (s2[i])
 		joined_str[j++] = s2[i++];
-	joined_str[j] = 0;
+	joined_str[j] = '\0';
 	return (joined_str);
 }
