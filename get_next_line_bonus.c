@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: angerard <angerard@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/13 11:37:35 by angerard          #+#    #+#             */
-/*   Updated: 2024/05/24 10:46:07 by angerard         ###   ########.fr       */
+/*   Created: 2024/05/23 11:28:00 by angerard          #+#    #+#             */
+/*   Updated: 2024/05/24 10:46:00 by angerard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*ft_strchr(const char *s, int c)
 {
@@ -76,7 +76,7 @@ static char	*read_line_from_file(int fd, char *txt_left, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
+	static char	*stash[MAX_FD];
 	char		*line;
 	char		*buffer;
 
@@ -85,17 +85,17 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
-		free(stash);
+		free(stash[fd]);
 		free(buffer);
-		stash = NULL;
+		stash[fd] = NULL;
 		buffer = NULL;
 		return (NULL);
 	}
-	line = read_line_from_file(fd, stash, buffer);
+	line = read_line_from_file(fd, stash[fd], buffer);
 	free(buffer);
 	buffer = NULL;
 	if (!line)
 		return (NULL);
-	stash = handle_residual_data(line);
+	stash[fd] = handle_residual_data(line);
 	return (line);
 }
