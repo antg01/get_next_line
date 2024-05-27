@@ -6,13 +6,22 @@
 /*   By: angerard <angerard@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 11:37:35 by angerard          #+#    #+#             */
-/*   Updated: 2024/05/24 10:46:07 by angerard         ###   ########.fr       */
+/*   Updated: 2024/05/27 12:50:54 by angerard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*ft_strchr(const char *s, int c)
+void	ft_free(char **str)
+{
+	if (str && *str)
+	{
+		free(*str);
+		*str = NULL;
+	}
+}
+
+static char	*ft_strchr(char *s, int c)
 {
 	while (*s)
 	{
@@ -23,29 +32,25 @@ static char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-static char	*handle_residual_data(char *line_buffer)
+static char	*handle_residual_data(char *line)
 {
 	char	*txt_left;
 	size_t	i;
 
 	i = 0;
-	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
-	{
+	while (line[i] != '\n' && line[i] != '\0')
 		i++;
-	}
-	if (line_buffer[i] == '\0')
+	if (line[i] == '\0')
 		return (NULL);
-	txt_left = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i - 1);
-	if (*txt_left == '\0')
-	{
-		free(txt_left);
-		txt_left = NULL;
-	}
-	line_buffer[i + 1] = '\0';
+	txt_left = ft_substr(line, i + 1, ft_strlen(line) - i);
+	if (txt_left && *txt_left == '\0')
+		ft_free(&txt_left);
+	if (line[i + 1] != '\0')
+		line[i + 1] = '\0';
 	return (txt_left);
 }
 
-static char	*read_line_from_file(int fd, char *txt_left, char *buffer)
+static char	*read_line_from_file(int fd, char *stash, char *buffer_txt)
 {
 	ssize_t	bytes_read;
 	char	*tmp;
@@ -53,49 +58,45 @@ static char	*read_line_from_file(int fd, char *txt_left, char *buffer)
 	bytes_read = 1;
 	while (bytes_read > 0)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		bytes_read = read(fd, buffer_txt, BUFFER_SIZE);
 		if (bytes_read == -1)
-		{
-			free(txt_left);
-			return (NULL);
-		}
+			return (ft_free(&stash), ft_free(&buffer_txt), NULL);
 		else if (bytes_read == 0)
 			break ;
-		buffer[bytes_read] = '\0';
-		if (!txt_left)
-			txt_left = ft_strdup("");
-		tmp = txt_left;
-		txt_left = ft_strjoin(tmp, buffer);
-		free(tmp);
-		tmp = NULL;
-		if (ft_strchr(buffer, '\n'))
+		buffer_txt[bytes_read] = '\0';
+		if (!stash)
+			stash = ft_strdup("");
+		tmp = stash;
+		stash = ft_strjoin(tmp, buffer_txt);
+		if (!stash)
+			return (ft_free(&tmp), ft_free(&buffer_txt), NULL);
+		ft_free(&tmp);
+		if (ft_strchr(buffer_txt, '\n'))
 			break ;
 	}
-	return (txt_left);
+	return (stash);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*stash;
 	char		*line;
-	char		*buffer;
+	char		*buffer_txt;
 
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buffer)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	buffer_txt = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer_txt)
+		return (NULL);
+	if (read(fd, buffer_txt, 0) < 0)
+		return (ft_free(&stash), ft_free(&buffer_txt), NULL);
+	line = read_line_from_file(fd, stash, buffer_txt);
+	ft_free(&buffer_txt);
+	if (!line)
 	{
-		free(stash);
-		free(buffer);
-		stash = NULL;
-		buffer = NULL;
+		ft_free(&stash);
 		return (NULL);
 	}
-	line = read_line_from_file(fd, stash, buffer);
-	free(buffer);
-	buffer = NULL;
-	if (!line)
-		return (NULL);
 	stash = handle_residual_data(line);
 	return (line);
 }

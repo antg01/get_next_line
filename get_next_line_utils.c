@@ -6,13 +6,13 @@
 /*   By: angerard <angerard@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:15:27 by angerard          #+#    #+#             */
-/*   Updated: 2024/05/16 16:07:14 by angerard         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:22:45 by angerard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(char *s)
 {
 	size_t	i;
 
@@ -24,7 +24,7 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(char *s1)
 {
 	size_t	i;
 	size_t	len;
@@ -44,7 +44,7 @@ char	*ft_strdup(const char *s1)
 	return (str);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+size_t	ft_strlcpy(char *dst, char *src, size_t dstsize)
 {
 	size_t	i;
 	size_t	src_len;
@@ -62,7 +62,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (src_len);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char	*substr;
 	size_t	actual_length;
@@ -72,8 +72,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (start >= ft_strlen(s))
 	{
 		substr = (char *)malloc(1);
-		if (substr)
-			substr[0] = '\0';
+		if (!substr)
+			return (NULL);
+		substr[0] = '\0';
 		return (substr);
 	}
 	actual_length = ft_strlen(s) - start;
@@ -86,7 +87,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (substr);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	i;
 	size_t	j;
