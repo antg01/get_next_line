@@ -6,7 +6,7 @@
 /*   By: angerard <angerard@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:15:27 by angerard          #+#    #+#             */
-/*   Updated: 2024/05/27 10:22:45 by angerard         ###   ########.fr       */
+/*   Updated: 2024/05/27 14:08:03 by angerard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,34 @@ size_t	ft_strlen(char *s)
 	return (i);
 }
 
-char	*ft_strdup(char *s1)
+// char	*ft_strdup(char *s1)
+// {
+// 	size_t	i;
+// 	size_t	len;
+// 	char	*str;
+
+// 	len = ft_strlen(s1);
+// 	str = (char *)malloc(sizeof(char) * (len + 1));
+// 	if (!str)
+// 		return (NULL);
+// 	i = 0;
+// 	while (i < len)
+// 	{
+// 		str[i] = s1[i];
+// 		i++;
+// 	}
+// 	str[i] = '\0';
+// 	return (str);
+// }
+
+char	*init_empty_string(void)
 {
-	size_t	i;
-	size_t	len;
 	char	*str;
 
-	len = ft_strlen(s1);
-	str = (char *)malloc(sizeof(char) * (len + 1));
+	str = malloc(sizeof(char) * 1);
 	if (!str)
 		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	str[i] = '\0';
+	str[0] = '\0';
 	return (str);
 }
 

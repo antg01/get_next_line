@@ -6,7 +6,7 @@
 /*   By: angerard <angerard@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 11:37:35 by angerard          #+#    #+#             */
-/*   Updated: 2024/05/27 12:50:54 by angerard         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:27:52 by angerard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char	*read_line_from_file(int fd, char *stash, char *buffer_txt)
 			break ;
 		buffer_txt[bytes_read] = '\0';
 		if (!stash)
-			stash = ft_strdup("");
+			stash = init_empty_string();
 		tmp = stash;
 		stash = ft_strjoin(tmp, buffer_txt);
 		if (!stash)
@@ -92,7 +92,7 @@ char	*get_next_line(int fd)
 		return (ft_free(&stash), ft_free(&buffer_txt), NULL);
 	line = read_line_from_file(fd, stash, buffer_txt);
 	ft_free(&buffer_txt);
-	if (!line)
+	if (!line || line[0] == '\0')
 	{
 		ft_free(&stash);
 		return (NULL);
