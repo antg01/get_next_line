@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: angerard <angerard@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/23 11:20:00 by angerard          #+#    #+#             */
-/*   Updated: 2024/05/27 14:37:30 by angerard         ###   ########.fr       */
+/*   Created: 2024/05/28 12:16:33 by angerard          #+#    #+#             */
+/*   Updated: 2024/05/28 13:05:55 by angerard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,10 @@
 # define MAX_FD OPEN_MAX
 
 char	*get_next_line(int fd);
-char	*ft_strdup(char *s1);
+int		ft_strlen(char *str);
+size_t	ft_strlcpy(char *dst, char *src, size_t dstsize);
 char	*ft_substr(char *s, unsigned int start, size_t len);
 char	*ft_strjoin(char *s1, char *s2);
-size_t	ft_strlen(char *s);
-size_t	ft_strlcpy(char *dst, char *src, size_t dstsize);
-void	ft_free(char **str);
-char	*init_empty_string(void);
+ssize_t	is_in_str(char *s, char c);
 
 #endif
